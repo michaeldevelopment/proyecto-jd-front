@@ -102,7 +102,9 @@ function App() {
         {isLoading ? (
           <Spin size="large" />
         ) : (
-          <Title level={3}> Potencia: {result} </Title>
+          <Title level={3}>
+            Potencia: {result < 0 || formData.irradiancia === 0 ? 0 : result}
+          </Title>
         )}
       </Flex>
     </Flex>
