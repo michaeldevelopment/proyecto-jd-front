@@ -53,7 +53,9 @@ function App() {
       );
 
       if (response.data.status === "done") {
-        const resultIrradiancias = response.data.result.flat();
+        const resultIrradiancias = response.data.result
+          .flat()
+          .map((irr) => (irr < 0 ? 0 : irr));
         console.log("resultados irradiancias => ", resultIrradiancias);
         const resultDataMap = apiData.map((apiData, index) => {
           return {
