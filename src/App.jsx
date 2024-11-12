@@ -1,42 +1,49 @@
-import { Flex, Typography, Button, Form, Input, DatePicker } from "antd";
+import { Flex, Typography, Button, Form, Input } from "antd";
 import axios from "axios";
 import { useState } from "react";
-import { CloudOutlined, RiseOutlined, SunOutlined } from "@ant-design/icons";
-import MapContainer from "./MapContainer";
 import Chart from "./Chart";
-import { mockData } from "./assets/mockData";
-import { mockData2Days } from "./assets/mockData2Days";
 
 const { Title, Text } = Typography;
-
-const { RangePicker } = DatePicker;
 
 function App() {
   const [isLoading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
 
+  const calculoPotencia = ({
+    potencia_max_panel,
+    irradiancia,
+    coef_temp,
+    temp,
+  }) => {
+    const calculo =
+      potencia_max_panel *
+      ((irradiancia < 0 ? 0 : irradiancia) / 1000) *
+      (1 + coef_temp * (temp - 25));
+
+    return calculo < 0 ? 0 : calculo;
+  };
+
   const onFinish = async (values) => {
     try {
       setLoading(true);
-      // const {
-      //   data: { data },
-      // } = await axios.get(
-      //   // "https://api.weatherbit.io/v2.0/current?lat=7.8891&lon=-72.4967&key=a4397c2ccdf84bda84e4b79e50d5ef83"
-      //   `https://api.weatherbit.io/v2.0/history/hourly?lat=7.8891&lon=-72.4967&start_date=${values.fechas[0].format(
-      //     "YYYY-MM-DD"
-      //   )}&end_date=${values.fechas[1].format(
-      //     "YYYY-MM-DD"
-      //   )}&tz=local&key=a4397c2ccdf84bda84e4b79e50d5ef83`
-      //   // "https://api.weatherbit.io/v2.0/forecast/hourly?city=Raleigh,NC&key=a4397c2ccdf84bda84e4b79e50d5ef83&hours=48"
-      // );
 
-      const apiData = mockData2Days.map((data, index) => {
+      const {
+        data: { data },
+      } = await axios.get(
+        `https://api.weatherbit.io/v2.0/forecast/hourly?lat=7.8891&lon=-72.4967&key=a4397c2ccdf84bda84e4b79e50d5ef83&hours=${
+          values.cantidad_dias * 24
+        }`
+      );
+
+      const apiData = data.map((data) => {
         return {
           hora: new Date(data.timestamp_local).getHours(),
           temperatura: data.app_temp,
           precipitacion: data.precip,
         };
       });
+
+      console.log("resultado api clima => ", apiData);
 
       const response = await axios.post(
         "http://localhost:5000/predict",
@@ -47,18 +54,18 @@ function App() {
         const resultData = response.data.result.flat();
         const resultDataMap = apiData.map((apiData, index) => {
           return {
-            hora: index,
-            potencia:
-              values.potencia_max_panel *
-              ((resultData[index] < 0 ? 0 : resultData[index]) / 1000) *
-              (1 + values.coef_temp * (apiData.temperatura - 25)),
+            hora: apiData.hora,
+            potencia: calculoPotencia({
+              potencia_max_panel: values.potencia_max_panel,
+              irradiancia: resultData[index],
+              coef_temp: values.coef_temp,
+              temp: apiData.temperatura,
+            }),
           };
         });
 
         setLoading(false);
         setResult(resultDataMap);
-        console.log("result => ", response.data.result.flat());
-        console.log("result data map => ", resultDataMap);
       }
     } catch (error) {
       console.error(error);
@@ -173,7 +180,7 @@ function App() {
               rules={[
                 {
                   required: true,
-                  message: "Ingresa un valor correcto mayor a 0",
+                  message: "Ingresa un valor",
                 },
               ]}
             >
@@ -194,13 +201,30 @@ function App() {
             </Form.Item>
 
             <Form.Item
-              label="Fechas"
-              name="fechas"
-              rules={[{ required: true, message: "Porfavor agregar fechas" }]}
+              label="Cantidad Max Días de Pronóstico"
+              name="cantidad_dias"
+              rules={[
+                {
+                  required: true,
+                  message: "Ingresa un valor",
+                },
+                () => ({
+                  validator(_, value) {
+                    if (value > 10 || value < 0) {
+                      return Promise.reject(
+                        new Error("Ingresa un valor entre 1 y 10")
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                }),
+              ]}
             >
-              <RangePicker
-                placeholder={["Fecha Inicio", "Fecha Fin"]}
-                format="YYYY-MM-DD"
+              <Input
+                type="number"
+                placeholder="Min 1 - Max 10"
+                min={1}
+                max={10}
               />
             </Form.Item>
             <Button
