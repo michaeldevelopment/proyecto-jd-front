@@ -106,20 +106,6 @@ function App() {
             </Form.Item>
 
             <Form.Item
-              name="coef_panel"
-              label="Coeficiente del panel: "
-              placeholder="Coeficiente del Panel"
-              rules={[
-                {
-                  required: true,
-                  message: "Ingresa un valor correcto mayor a 0",
-                },
-              ]}
-            >
-              <Input type="number" placeholder="Coeficiente del Panel" />
-            </Form.Item>
-
-            <Form.Item
               name="voltaje_circuito_abierto"
               label="Voltaje Circuito Abierto: "
               rules={[
@@ -175,7 +161,7 @@ function App() {
 
             <Form.Item
               name="coef_temp"
-              label="Coeficiente Temperatura: "
+              label="Coeficiente Temperatura En Max Potencia: "
               placeholder="Coeficiente Temperatura"
               rules={[
                 {
