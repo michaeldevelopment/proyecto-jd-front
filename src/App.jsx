@@ -14,11 +14,13 @@ function App() {
     irradiancia,
     coef_temp,
     temp,
+    cantidad_paneles,
   }) => {
     const calculo =
       potencia_max_panel *
       ((irradiancia < 0 ? 0 : irradiancia) / 1000) *
-      (1 + coef_temp * (temp - 25));
+      (1 + coef_temp * (temp - 25)) *
+      cantidad_paneles;
 
     return calculo < 0 ? 0 : calculo;
   };
@@ -51,15 +53,17 @@ function App() {
       );
 
       if (response.data.status === "done") {
-        const resultData = response.data.result.flat();
+        const resultIrradiancias = response.data.result.flat();
+        console.log("resultados irradiancias => ", resultIrradiancias);
         const resultDataMap = apiData.map((apiData, index) => {
           return {
             hora: apiData.hora,
             potencia: calculoPotencia({
               potencia_max_panel: values.potencia_max_panel,
-              irradiancia: resultData[index],
+              irradiancia: resultIrradiancias[index],
               coef_temp: values.coef_temp,
               temp: apiData.temperatura,
+              cantidad_paneles: values.cantidad_paneles,
             }),
           };
         });
