@@ -90,7 +90,7 @@ const renderCustomizedLegend = (data, firstData) => {
         <Flex gap={10} align="center" justify="center" wrap>
           {temperaturasMaximas.map((tempMax, index) => (
             <div key={index}>
-              <FireFilled /> Temperatura máx. día {index + 1} - {tempMax} °C
+              <FireFilled /> Temperatura máx. día {index + 1}: {tempMax} °C
             </div>
           ))}
         </Flex>
