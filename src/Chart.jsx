@@ -16,7 +16,7 @@ import { splitIntoChunks } from "./utils/splitIntoChunks";
 const Chart = ({ data, firstData }) => {
   return (
     <AreaChart
-      width={900}
+      width={700}
       height={600}
       data={data}
       margin={{ top: 5, right: 30, left: 20, bottom: 5 }}

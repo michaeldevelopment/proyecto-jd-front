@@ -85,7 +85,7 @@ function App() {
       >
         Predicción de Potencia Fotovoltaica - Cúcuta, Norte de Santander.
       </Title>
-      <Flex justify="center" gap={20} style={{ padding: "20px" }}>
+      <Flex justify="center" gap={20} style={{ padding: "20px" }} wrap>
         <Flex justify="center" align="left" gap={20} vertical>
           <Flex vertical justify="center" align="center">
             <img src={imagenLogoUFPS} alt="logo UFPS" width={70} height={70} />
