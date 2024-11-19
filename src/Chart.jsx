@@ -60,31 +60,51 @@ const Chart = ({ data, firstData }) => {
 const renderCustomizedLegend = (data, firstData) => {
   const dataSplitted = splitIntoChunks(data);
 
-  const tempMax = Math.max(
-    ...dataSplitted[0].map((element) => element.temperatura)
+  const temperaturasMaximas = dataSplitted.map((dayData) =>
+    Math.max(...dayData.map((element) => element.temperatura))
   );
 
-  const potenciaMax = (
-    dataSplitted[0]
-      .map((element) => element.potencia)
-      .reduce((acc, el) => (acc = el + acc), 0) /
-    24 /
-    1000
-  ).toFixed(4);
+  const promediosPotencias = dataSplitted.map((dayData) =>
+    (
+      dayData
+        .map((element) => element.potencia)
+        .reduce((acc, el) => acc + el, 0) /
+      24 /
+      1000
+    ).toFixed(4)
+  );
 
   return (
-    <Flex gap={20} style={{ marginBottom: 10 }}>
-      <div>
-        <SunFilled /> Temperatura actual: {firstData?.tempActual} °C -
-        {firstData?.primerDia}
-      </div>
-      <div>
-        <FireFilled /> Temperatura máxima del día: {tempMax}
-      </div>
-      <div>
-        <PlayCircleFilled /> Potencia promedio día (kWh): {potenciaMax}
-      </div>
-    </Flex>
+    <>
+      <Flex
+        gap={10}
+        vertical
+        justify="center"
+        align="center"
+        style={{ marginBottom: 10 }}
+      >
+        <div>
+          <SunFilled /> Temperatura actual: {firstData?.tempActual} °C -
+          {firstData?.primerDia}
+        </div>
+        <Flex gap={10} align="center" justify="center" wrap>
+          {temperaturasMaximas.map((tempMax, index) => (
+            <div key={index}>
+              <FireFilled /> Temperatura máx. día {index + 1} - {tempMax} °C
+            </div>
+          ))}
+        </Flex>
+        <Flex gap={10} align="center" justify="center" wrap>
+          {promediosPotencias.map((promedioDia, index) => (
+            <div key={index}>
+              <PlayCircleFilled /> Potencia promedio día {index + 1}
+              (kWh):
+              {promedioDia}
+            </div>
+          ))}
+        </Flex>
+      </Flex>
+    </>
   );
 };
 
