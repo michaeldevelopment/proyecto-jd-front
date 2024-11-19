@@ -7,6 +7,8 @@ import imagenLogoUFPS from "./assets/logoUFPS.png";
 
 const { Title, Text } = Typography;
 
+const BACKEND_API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [isLoading, setLoading] = useState(false);
   const [result, setResult] = useState([]);
@@ -37,7 +39,7 @@ function App() {
 
       const dias = Number(values.cantidad_dias) + 1;
 
-      const response = await axios.post("http://localhost:5000/predict", {
+      const response = await axios.post(`${BACKEND_API_URL}/predict`, {
         horas: (dias <= 9 ? dias : 10) * 24,
       });
 
