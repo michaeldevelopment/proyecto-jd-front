@@ -95,7 +95,7 @@ export const formElements = [
       },
     ],
     explanation:
-      "Es la cantidad de paneles con la qu deseas hacer la estimacion del cálculo de potencia.",
+      "Es la cantidad de paneles con la que deseas hacer la estimacion del cálculo de potencia.",
   },
   {
     name: "cantidad_dias",

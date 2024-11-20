@@ -99,6 +99,16 @@ function App() {
         </Flex>
         <Chart data={result} firstData={firstData} />
       </Flex>
+      <Flex vertical justify="center" align="center">
+        <Title level={4} align="center">
+          Presentado por:
+        </Title>
+        <Flex gap={30}>
+          <Text> José David Zipaquirá </Text>
+          <Text> Jesús David Greis </Text>
+          <Text> Juan Diego Rodríguez </Text>
+        </Flex>
+      </Flex>
     </>
   );
 }
